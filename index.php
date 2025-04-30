@@ -7,7 +7,7 @@ require_once 'db_connection.php';
 // Prepara e esegui la query per ottenere tutte le anagrafiche
 // Ordiniamo per cognome e poi per nome
 try {
-    $stmt = $pdo->query('SELECT id, nome, cognome, sesso, data_nascita, codice_fiscale FROM anagrafiche ORDER BY cognome, nome');
+    $stmt = $pdo->query('SELECT id, nome, cognome, sesso, data_nascita, codice_fiscale, email FROM anagrafiche ORDER BY cognome, nome');
     // Non è necessario $stmt->execute() per query semplici senza parametri
 } catch (\PDOException $e) {
     die("Errore durante il recupero delle anagrafiche: " . $e->getMessage());
@@ -48,6 +48,7 @@ try {
                 <th>Sesso</th>
                 <th>Data di Nascita</th>
                 <th>Codice Fiscale</th>
+                <th>Email</th>
                 <th>Azioni</th>
             </tr>
         </thead>
@@ -60,6 +61,7 @@ try {
                     <td><?php echo htmlspecialchars($row['sesso']); ?></td>
                     <td><?php echo htmlspecialchars($row['data_nascita'] ? date('d/m/Y', strtotime($row['data_nascita'])) : ''); ?></td>
                     <td><?php echo htmlspecialchars($row['codice_fiscale']); ?></td>
+                    <td><?php echo htmlspecialchars($row['email']); ?></td>
                     <td class="actions">
                         <a href="form.php?id=<?php echo $row['id']; ?>">Modifica</a>
                         <a href="delete.php?id=<?php echo $row['id']; ?>" onclick="return confirm('Sei sicuro di voler eliminare questa anagrafica?');">Elimina</a>

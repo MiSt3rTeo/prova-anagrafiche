@@ -24,6 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $codice_fiscale = filter_input(INPUT_POST, 'codice_fiscale', FILTER_SANITIZE_STRING);
     // Potresti aggiungere validazione più specifica per il codice fiscale qui
 
+    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING);
+
     // ---- Validazione Base ----
     if (empty($nome) || empty($cognome)) {
         die("Nome e Cognome sono obbligatori.");
@@ -38,15 +40,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         cognome = :cognome,
                         sesso = :sesso,
                         data_nascita = :data_nascita,
-                        codice_fiscale = :codice_fiscale
+                        codice_fiscale = :codice_fiscale,
+                        email = :email
                     WHERE id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
         // Altrimenti (nessun ID valido o azione 'add'), inserisci un nuovo record
         } else {
-            $sql = "INSERT INTO anagrafiche (nome, cognome, sesso, data_nascita, codice_fiscale)
-                    VALUES (:nome, :cognome, :sesso, :data_nascita, :codice_fiscale)";
+            $sql = "INSERT INTO anagrafiche (nome, cognome, sesso, data_nascita, codice_fiscale, email)
+                    VALUES (:nome, :cognome, :sesso, :data_nascita, :codice_fiscale, :email)";
             $stmt = $pdo->prepare($sql);
         }
 
@@ -56,6 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':sesso', $sesso, PDO::PARAM_STR);
         $stmt->bindParam(':data_nascita', $data_nascita); // PDO gestisce NULL
         $stmt->bindParam(':codice_fiscale', $codice_fiscale, PDO::PARAM_STR);
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+
 
         // Esegui la query
         $stmt->execute();
