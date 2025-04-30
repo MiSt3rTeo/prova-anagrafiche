@@ -10,7 +10,8 @@ $anagrafica = [
     'cognome' => '',
     'sesso' => '',
     'data_nascita' => '',
-    'codice_fiscale' => ''
+    'codice_fiscale' => '',
+    'email' => ''
 ];
 $page_title = 'Aggiungi Nuova Anagrafica';
 $action = 'add'; // Azione predefinita: aggiunta
@@ -113,6 +114,12 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         <div class="form-group">
             <label for="codice_fiscale">Codice Fiscale:</label>
             <input type="text" id="codice_fiscale" name="codice_fiscale" value="<?php echo htmlspecialchars($anagrafica['codice_fiscale']); ?>" pattern="[A-Za-z]{6}[0-9]{2}[A-Za-z]{1}[0-9]{2}[A-Za-z]{1}[0-9]{3}[A-Za-z]{1}" title="Inserisci un codice fiscale valido (es. RSSMRA80A01H501A)">
+            <!-- Nota: Il pattern è una validazione HTML base, non sostituisce la validazione lato server -->
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" value="<?php echo htmlspecialchars($anagrafica['email']); ?>">
             <!-- Nota: Il pattern è una validazione HTML base, non sostituisce la validazione lato server -->
         </div>
 
