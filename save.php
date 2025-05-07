@@ -25,6 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Potresti aggiungere validazione più specifica per il codice fiscale qui
 
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING);
+    $comune = filter_input(INPUT_POST, 'comune', FILTER_SANITIZE_STRING);
+    $provincia = filter_input(INPUT_POST, 'provincia', FILTER_SANITIZE_STRING);
+    $provincia = $provincia ? strtoupper(substr($provincia, 0, 2)) : null; // Assicura maiuscolo e max 2 caratteri
+    $professione = filter_input(INPUT_POST, 'professione', FILTER_SANITIZE_STRING);
 
     // ---- Validazione Base ----
     if (empty($nome) || empty($cognome)) {
@@ -41,15 +45,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         sesso = :sesso,
                         data_nascita = :data_nascita,
                         codice_fiscale = :codice_fiscale,
-                        email = :email
+                        email = :email,
+                        comune = :comune,
+                        provincia = :provincia,
+                        professione = :professione
                     WHERE id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
         // Altrimenti (nessun ID valido o azione 'add'), inserisci un nuovo record
         } else {
-            $sql = "INSERT INTO anagrafiche (nome, cognome, sesso, data_nascita, codice_fiscale, email)
-                    VALUES (:nome, :cognome, :sesso, :data_nascita, :codice_fiscale, :email)";
+            $sql = "INSERT INTO anagrafiche (nome, cognome, sesso, data_nascita, codice_fiscale, email, comune, provincia, professione)
+                    VALUES (:nome, :cognome, :sesso, :data_nascita, :codice_fiscale, :email, :comune, :provincia, :professione)";
             $stmt = $pdo->prepare($sql);
         }
 
@@ -60,7 +67,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':data_nascita', $data_nascita); // PDO gestisce NULL
         $stmt->bindParam(':codice_fiscale', $codice_fiscale, PDO::PARAM_STR);
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-
+        $stmt->bindParam(':comune', $comune, PDO::PARAM_STR);
+        $stmt->bindParam(':provincia', $provincia, PDO::PARAM_STR);
+        $stmt->bindParam(':professione', $professione, PDO::PARAM_STR);
 
         // Esegui la query
         $stmt->execute();

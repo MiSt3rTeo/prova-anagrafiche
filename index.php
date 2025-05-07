@@ -7,7 +7,7 @@ require_once 'db_connection.php';
 // Prepara e esegui la query per ottenere tutte le anagrafiche
 // Ordiniamo per cognome e poi per nome
 try {
-    $stmt = $pdo->query('SELECT id, nome, cognome, sesso, data_nascita, codice_fiscale, email FROM anagrafiche ORDER BY cognome, nome');
+    $stmt = $pdo->query('SELECT id, nome, cognome, sesso, data_nascita, codice_fiscale, email, comune, provincia, professione FROM anagrafiche ORDER BY cognome, nome');
     // Non è necessario $stmt->execute() per query semplici senza parametri
 } catch (\PDOException $e) {
     die("Errore durante il recupero delle anagrafiche: " . $e->getMessage());
@@ -39,6 +39,7 @@ try {
     <h1>Elenco Anagrafiche</h1>
 
     <a href="form.php" class="add-button">Aggiungi Nuova Anagrafica</a>
+    <a href="statistiche.php" class="add-button" style="background-color: #17a2b8; margin-left: 10px;">Visualizza Statistiche</a>
 
     <table>
         <thead>
@@ -49,6 +50,9 @@ try {
                 <th>Data di Nascita</th>
                 <th>Codice Fiscale</th>
                 <th>Email</th>
+                <th>Comune</th>
+                <th>Provincia</th>
+                <th>Professione</th>
                 <th>Azioni</th>
             </tr>
         </thead>
@@ -62,6 +66,9 @@ try {
                     <td><?php echo htmlspecialchars($row['data_nascita'] ? date('d/m/Y', strtotime($row['data_nascita'])) : ''); ?></td>
                     <td><?php echo htmlspecialchars($row['codice_fiscale']); ?></td>
                     <td><?php echo htmlspecialchars($row['email']); ?></td>
+                    <td><?php echo htmlspecialchars($row['comune']); ?></td>
+                    <td><?php echo htmlspecialchars($row['provincia']); ?></td>
+                    <td><?php echo htmlspecialchars($row['professione']); ?></td>
                     <td class="actions">
                         <a href="form.php?id=<?php echo $row['id']; ?>">Modifica</a>
                         <a href="delete.php?id=<?php echo $row['id']; ?>" onclick="return confirm('Sei sicuro di voler eliminare questa anagrafica?');">Elimina</a>
@@ -70,7 +77,7 @@ try {
                 <?php endwhile; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="6">Nessuna anagrafica trovata.</td>
+                    <td colspan="9">Nessuna anagrafica trovata.</td>
                 </tr>
             <?php endif; ?>
         </tbody>
